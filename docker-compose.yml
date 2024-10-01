@@ -1,0 +1,9 @@
+services:
+  server:
+    build:
+      context: .
+    container_name: demo
+    ports:
+      - 8000:8000
+    environment:
+      - DEMO_APP_PORT=8000

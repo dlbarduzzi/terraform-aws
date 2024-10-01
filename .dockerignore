@@ -1,0 +1,10 @@
+Dockerfile
+docker-compose*
+.dockerignore
+.git
+.gitignore
+.env
+infra/
+Makefile
+LICENSE
+README.md

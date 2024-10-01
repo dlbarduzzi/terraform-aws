@@ -10,6 +10,12 @@ app/test:
 app/test/report: test
 	@go tool cover -html=coverage.out
 
+app/docker/run:
+	@docker compose up
+
+app/docker/build:
+	@docker compose up --build
+
 config/init:
 	docker compose --project-directory ./infra run --rm terraform -chdir=config init
 
