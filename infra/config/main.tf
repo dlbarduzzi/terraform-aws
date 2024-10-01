@@ -7,9 +7,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "terraform-state-d3d425e29e7d1f25"
+    bucket         = "terraform-state-d3d425e29e7d1f25"
     key            = "aws-config"
-    region = "us-east-1"
+    region         = "us-east-1"
     encrypt        = true
     dynamodb_table = "terraform-state-d3d425e29e7d1f25"
   }
