@@ -40,11 +40,44 @@ data "aws_iam_policy_document" "tf_backend" {
 
 resource "aws_iam_policy" "tf_backend" {
   name        = "${aws_iam_user.bot.name}.tfstate"
-  description = "Allow user to access s3 and dynamodb terraform state resources"
+  description = "Allow user to access s3 and dynamodb terraform state resources."
   policy      = data.aws_iam_policy_document.tf_backend.json
 }
 
 resource "aws_iam_user_policy_attachment" "tf_backend" {
   user       = aws_iam_user.bot.name
   policy_arn = aws_iam_policy.tf_backend.arn
+}
+
+data "aws_iam_policy_document" "ecr" {
+  statement {
+    effect    = "Allow"
+    actions   = ["ecr:GetAuthorizationToken"]
+    resources = ["*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:CompleteLayerUpload",
+      "ecr:InitiateLayerUpload",
+      "ecr:PutImage",
+      "ecr:UploadLayerPart"
+    ]
+    resources = [
+      aws_ecr_repository.app.arn,
+    ]
+  }
+}
+
+resource "aws_iam_policy" "ecr" {
+  name        = "${aws_iam_user.bot.name}.ecr"
+  description = "Allow user to access ecr resources."
+  policy      = data.aws_iam_policy_document.ecr.json
+}
+
+resource "aws_iam_user_policy_attachment" "ecr" {
+  user       = aws_iam_user.bot.name
+  policy_arn = aws_iam_policy.ecr.arn
 }
