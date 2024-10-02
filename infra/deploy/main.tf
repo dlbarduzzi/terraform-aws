@@ -29,4 +29,8 @@ provider "aws" {
   }
 }
 
+locals {
+  prefix = "${var.prefix}-${terraform.workspace}"
+}
+
 data "aws_region" "current" {}
