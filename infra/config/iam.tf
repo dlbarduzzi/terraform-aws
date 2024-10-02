@@ -81,3 +81,59 @@ resource "aws_iam_user_policy_attachment" "ecr" {
   user       = aws_iam_user.bot.name
   policy_arn = aws_iam_policy.ecr.arn
 }
+
+data "aws_iam_policy_document" "ec2" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:AssociateRouteTable",
+      "ec2:AttachInternetGateway",
+      "ec2:AuthorizeSecurityGroupEgress",
+      "ec2:AuthorizeSecurityGroupIngress",
+      "ec2:CreateInternetGateway",
+      "ec2:CreateRoute",
+      "ec2:CreateRouteTable",
+      "ec2:CreateSecurityGroup",
+      "ec2:CreateSubnet",
+      "ec2:CreateTags",
+      "ec2:CreateVpc",
+      "ec2:CreateVpcEndpoint",
+      "ec2:DeleteInternetGateway",
+      "ec2:DeleteRoute",
+      "ec2:DeleteRouteTable",
+      "ec2:DeleteSecurityGroup",
+      "ec2:DeleteSubnet",
+      "ec2:DeleteVpc",
+      "ec2:DeleteVpcEndpoints",
+      "ec2:DescribeInternetGateways",
+      "ec2:DescribeNetworkAcls",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DescribePrefixLists",
+      "ec2:DescribeRouteTables",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeVpcAttribute",
+      "ec2:DescribeVpcEndpoints",
+      "ec2:DescribeVpcs",
+      "ec2:DetachInternetGateway",
+      "ec2:DetachNetworkInterface",
+      "ec2:DisassociateRouteTable",
+      "ec2:ModifySubnetAttribute",
+      "ec2:ModifyVpcAttribute",
+      "ec2:RevokeSecurityGroupEgress",
+      "ec2:RevokeSecurityGroupIngress",
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "ec2" {
+  name        = "${aws_iam_user.bot.name}.ec2"
+  description = "Allow user to manage ec2 resources."
+  policy      = data.aws_iam_policy_document.ec2.json
+}
+
+resource "aws_iam_user_policy_attachment" "ec2" {
+  user       = aws_iam_user.bot.name
+  policy_arn = aws_iam_policy.ec2.arn
+}

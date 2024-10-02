@@ -36,3 +36,6 @@ deploy/fmt:
 
 deploy/validate:
 	docker compose --project-directory ./infra run --rm terraform -chdir=deploy validate
+
+fmt: config/fmt deploy/fmt
+validate: config/validate deploy/validate
