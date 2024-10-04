@@ -105,6 +105,7 @@ data "aws_iam_policy_document" "ec2" {
       "ec2:DeleteSubnet",
       "ec2:DeleteVpc",
       "ec2:DeleteVpcEndpoints",
+      "ec2:DescribeAvailabilityZones",
       "ec2:DescribeInternetGateways",
       "ec2:DescribeNetworkAcls",
       "ec2:DescribeNetworkInterfaces",
@@ -136,6 +137,30 @@ resource "aws_iam_policy" "ec2" {
 resource "aws_iam_user_policy_attachment" "ec2" {
   user       = aws_iam_user.bot.name
   policy_arn = aws_iam_policy.ec2.arn
+}
+
+data "aws_iam_policy_document" "service_linked_rds" {
+  statement {
+    effect    = "Allow"
+    actions   = ["iam:CreateServiceLinkedRole"]
+    resources = ["arn:aws:iam::*:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS"]
+    condition {
+      test     = "StringLike"
+      variable = "iam:AWSServiceName"
+      values   = ["rds.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_policy" "service_linked_rds" {
+  name        = "${aws_iam_user.bot.name}.svclinkedrds"
+  description = "Allow rds to call aws services on behalf of db instances."
+  policy      = data.aws_iam_policy_document.service_linked_rds.json
+}
+
+resource "aws_iam_user_policy_attachment" "service_linked_rds" {
+  user       = aws_iam_user.bot.name
+  policy_arn = aws_iam_policy.service_linked_rds.arn
 }
 
 data "aws_iam_policy_document" "rds" {

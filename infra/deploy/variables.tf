@@ -15,7 +15,7 @@ variable "project_owner" {
 
 variable "db_username" {
   description = "Database username for the demo app."
-  default     = "demo-user"
+  default     = "demouser"
 }
 
 variable "db_password" {
